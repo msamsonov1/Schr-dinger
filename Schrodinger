@@ -1,0 +1,62 @@
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Define constants (replace with your specific values)
+mass = 1  # Mass of the particle (in kg)
+hbar = 1  # Reduced Planck constant (in J*s)
+
+# Define potential function (replace with your desired potential)
+def potential(x):
+  return 0.5 * x**2  # Example harmonic potential (replace with your actual potential)
+
+# Define initial wave function (replace with your desired function)
+def psi0(x):
+  return np.exp(-x**2)  # Example Gaussian wave function
+
+# Discretize space (adjust x_min, x_max, and num_points for your needs)
+x_min = -5
+x_max = 5
+num_points = 200
+dx = (x_max - x_min) / (num_points - 1)
+x = np.linspace(x_min, x_max, num_points)
+
+# Calculate kinetic energy term (assuming constant mass)
+kinetic_energy = -hbar**2 / (2 * mass * dx**2) * np.eye(num_points)
+
+# Calculate potential energy term
+potential_energy = np.diag(potential(x))
+
+# Combine kinetic and potential energy terms (simple Hamiltonian)
+hamiltonian = kinetic_energy + potential_energy
+
+# Simulate a simple wave function evolution (replace with actual solver for real problems)
+psi = psi0(x)  # Start with the initial wave function
+new_psi = np.linalg.solve(hamiltonian, psi)  # Simulate one step of evolution
+
+# Plot the wave function (absolute value squared represents probability density)
+fig, ax = plt.subplots(figsize=(8, 6))  # Adjust figure size for readability
+
+# Plot the wave function
+ax.plot(x, np.abs(psi)**2, label="Wave Function (|ψ|^2)", color='b')
+
+# Add text for the Schrödinger equation with explanations
+equation_text = r"$\hat{H}\psi = E\psi$ (Schrödinger Equation)" + "\n"
+equation_text += r"where:" + "\n"
+equation_text += r"$\hat{H}$ = Hamiltonian operator" + "\n"
+equation_text += r"   - Kinetic energy: $-\dfrac{\hbar^2}{2m} \dfrac{\partial^2}{\partial x^2}$" + "\n"
+equation_text += r"   - Potential energy: V(x)" + "\n"
+equation_text += r"$\psi$ = Wave function" + "\n"
+equation_text += r"$E$ = Total energy"
+ax.text(-4, 0.9, equation_text, ha='left', va='top', fontsize=10, bbox=dict(facecolor='none', edgecolor='black', pad=5.0))
+
+# Question and Answer Text
+question_text = r"**Question:** What does the absolute value squared of the wave function, |ψ|^2, represent?"
+answer_text = r"**Answer:** The absolute value squared of the wave function, |ψ|^2, represents the probability density of finding the particle at a specific position."
+ax.text(-4.2, 0.2, question_text, ha='left', va='top', fontsize=10, bbox=dict(facecolor='none', edgecolor='black', pad=5.0))
+ax.text(-4.05, 0.05, answer_text, ha='left', va='top', fontsize=10, bbox=dict(facecolor='none', edgecolor='black', pad=5.0))
+
+ax.set_xlabel("Position (x)")
+ax.set_ylabel("Probability Density (|ψ|^2)")
+ax.set_title("Wave Function and Schrödinger Equation")
+ax.legend()
+plt.show()
